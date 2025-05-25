@@ -1,9 +1,12 @@
 import React from "react";
 
 const Login = () => {
+    
+
+
     return (
         <div>
-            <h1>login page </h1>
+            <h1>login</h1>
         </div>
        
     )

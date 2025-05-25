@@ -1,20 +1,20 @@
 import {useState} from 'react';
-// import Login from './Auth/Login';
-// import Modal from '../components/Modal';
-// import SignUp from './Auth/SignUp';
+import Login from './Auth/Login';
+import Modal from '../components/Modal';
+import SignUp from './Auth/SignUp';
 import HERO_IMG from '../assets/hero.png';
 import {useNavigate} from 'react-router-dom';
 
 const LandingPage = () => {
   const navigate = useNavigate ();
 
-  const [openAuthModal, setOpenAuthModal] = useState (false);
+  const [openAuthModal, setOpenAuthModal] = useState (true);
   const [currentPage, setCurrentPage] = useState ('login');
 
   const handleCTA = () => {};
 
   return (
-    <div className="w-full min-h-full bg-white pb-96">
+    <div className="w-full min-h-full bg-white">
       <div className="container mx-auto px-4 py-6">
 
         {/* Header */}
@@ -88,7 +88,7 @@ const LandingPage = () => {
         </section>
 
         {/* Footer */}
-        <footer className="mt-16 text-center text-gray-600">
+        <div className="mt-16 text-center text-gray-600">
           <p>
             &copy;
             {' '}
@@ -97,23 +97,25 @@ const LandingPage = () => {
             Resume Builder. All rights reserved.
           </p>
           <p className="text-sm">Made with ❤️ by dikshakuthe</p>
-        </footer>
+        </div>
 
-        {/* Auth Modal Placeholder
-       <Modal isOpen ={openAuthModal}
+      </div>
+
+      {/* Auth Modal  */}
+      <Modal isOpen ={openAuthModal}
        onClose = {() =>  {setOpenAuthModal (false);
         setCurrentPage ('login')
        }}
-       >
+       
        hideHeader 
+       >
         <div >
           {currentPage === 'login' && <Login setCurrentPage ={setCurrentPage} />}
           {currentPage === 'signup' && <SignUp setCurrentPage ={setCurrentPage} />}
         </div>
        
-        </Modal> */}
+        </Modal>
 
-      </div>
     </div>
   );
 };
