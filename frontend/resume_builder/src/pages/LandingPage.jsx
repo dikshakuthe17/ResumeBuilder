@@ -8,7 +8,8 @@ import {useNavigate} from 'react-router-dom';
 const LandingPage = () => {
   const navigate = useNavigate ();
 
-  const [openAuthModal, setOpenAuthModal] = useState (true);
+  const [openAuthModal, setOpenAuthModal] = useState (false);
+  // State to manage the current page in the modal (login or signup)
   const [currentPage, setCurrentPage] = useState ('login');
 
   const handleCTA = () => {};
