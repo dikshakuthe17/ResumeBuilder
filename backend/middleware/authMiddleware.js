@@ -1,29 +1,22 @@
-const jwt = require ('jsonwebtoken');
-const User = require ('../models/User');
-
-// Middleware to protect routes
+const jwt = require('jsonwebtoken');
+const User = require('../models/User');
 
 const protect = async (req, res, next) => {
   try {
-    // Get token from headers
-    const token = req.headers.authorization;
-
-    if (token && token.startsWith ('Bearer ')) {
-      // Remove 'Bearer ' prefix
-      token = token.split (' ')[1];
-      // Verify token
-      const decoded = jwt.verify (token, process.env.JWT_SECRET);
-
-      // Find user by ID
-      req.user = await User.findById (decoded.id).select ('-password');
-      next ();
-    } else {
-      res.status (401).json ({message: 'Not authorized, no token'});
+    const token = req.headers.authorization?.split(' ')[1];
+    if (!token) {
+      return res.status(401).json({ message: 'No token, authorization denied' });
     }
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findById(decoded.id).select('-password');
+    if (!user) {
+      return res.status(401).json({ message: 'User not found' });
+    }
+    req.user = user;
+    next();
   } catch (error) {
-    res.status (401).json ({message: 'Not authorized, token failed'});
-    console.error ('Error in protect middleware:', error);
+    res.status(401).json({ message: 'Token is not valid' });
   }
 };
 
-module.exports = {protect};
+module.exports = { protect };
