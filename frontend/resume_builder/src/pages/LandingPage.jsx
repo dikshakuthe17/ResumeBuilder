@@ -4,29 +4,39 @@ import Modal from '../components/Modal';
 import SignUp from './Auth/SignUp';
 import HERO_IMG from '../assets/hero.png';
 import {useNavigate} from 'react-router-dom';
+import { UserContext } from '../context/userContext';
+import { useContext } from 'react';
+import ProfileInfoCard from '../components/Cards/ProfileInfoCard';
 
 const LandingPage = () => {
+  const {user} = useContext(UserContext)
   const navigate = useNavigate ();
+  
 
   const [openAuthModal, setOpenAuthModal] = useState (false);
   // State to manage the current page in the modal (login or signup)
   const [currentPage, setCurrentPage] = useState ('login');
 
-  const handleCTA = () => {};
+  const handleCTA = () => {
+    if(!user){
+      setOpenAuthModal(true)
+    }else{
+      navigate('/dashboard')
+    }
+  };
 
   return (
-    <div className="w-full min-h-full bg-white">
+    <div className="w-full min-h-full bg-white px-10">
       <div className="container mx-auto px-4 py-6">
 
         {/* Header */}
         <header className="flex justify-between items-center mb-16">
           <div className="text-xl font-bold">Resume Builder</div>
-          <button
+          {user ? <ProfileInfoCard /> : <button
             className="bg-purple-100 text-sm font-semibold text-black px-7 py-2.5 rounded-lg hover:bg-gray-800 hover:text-white transition-colors cursor-pointer"
             onClick={() => setOpenAuthModal (true)}
-          >
-            {' '}Login / Sign Up
-          </button>
+          >Login / Sign Up
+          </button>}
         </header>
 
         {/* Hero Section */}
@@ -47,11 +57,11 @@ const LandingPage = () => {
             >
               Get Started
             </button>
-            <div className="w-full md:w-1/2">
-              <img src={HERO_IMG} alt="Hero" className="w-full rounded-lg" />
-            </div>
           </div>
-        </div>
+          <div className="w-full md:w-1/2">
+            <img src={HERO_IMG} alt="Hero" className="w-full rounded-lg" />
+          </div>
+        </div>;
 
         {/* Features Section */}
         <section className="mt-5">
@@ -103,19 +113,21 @@ const LandingPage = () => {
       </div>
 
       {/* Auth Modal  */}
-      <Modal isOpen ={openAuthModal}
-       onClose = {() =>  {setOpenAuthModal (false);
-        setCurrentPage ('login')
-       }}
-       
-       hideHeader 
-       >
-        <div >
-          {currentPage === 'login' && <Login setCurrentPage ={setCurrentPage} />}
-          {currentPage === 'signup' && <SignUp setCurrentPage ={setCurrentPage} />}
+      <Modal
+        isOpen={openAuthModal}
+        onClose={() => {
+          setOpenAuthModal (false);
+          setCurrentPage ('login');
+        }}
+        hideHeader
+      >
+        <div>
+          {currentPage === 'login' && <Login setCurrentPage={setCurrentPage} />}
+          {currentPage === 'signup' &&
+            <SignUp setCurrentPage={setCurrentPage} />}
         </div>
-       
-        </Modal>
+
+      </Modal>
 
     </div>
   );

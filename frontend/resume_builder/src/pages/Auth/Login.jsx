@@ -1,7 +1,10 @@
-import React, {useState} from 'react';
+import React, {useState, useContext} from 'react';
 import Input from '../../components/Inputs/Input';
 import {useNavigate} from 'react-router-dom';
 import {validateEmail} from '../../utils/helper';
+import {UserContext} from '../../context/userContext';
+import axiosInstance from '../../utils/axiosInstance';
+import {API_PATHS} from '../../utils/apiPaths';
 
 const Login = ({setCurrentPage}) => {
   const [email, setEmail] = useState ('');
@@ -9,6 +12,7 @@ const Login = ({setCurrentPage}) => {
   const [error, setError] = useState ('');
   // Add this above your component or import from a utils file
 
+  const {updateUser} = useContext (UserContext);
   const navigate = useNavigate ();
 
   // Handle Login Form submit
@@ -29,11 +33,29 @@ const Login = ({setCurrentPage}) => {
 
     // Login API Call
 
-    // try{
+    try {
+      const response = await axiosInstance.post (API_PATHS.AUTH.LOGIN, {
+        email,
+        password,
+      });
 
-    // }catch(error){
+      const {token} = response.data;
 
-    // }
+      
+      if (token) {
+        localStorage.setItem ('token', token);
+        updateUser (response.data);
+        navigate ('/dashboard'); // Redirect to dashboard after successful login
+      }
+    } catch (error) {
+      console.error ( error);
+      if (error.response && error.response.data.message) {
+        setError (error.response.data.message);
+
+      } else {
+        setError ('something went wrong, please try again.');
+      }
+    }
   };
   return (
     <div className="w-[90vw] md:w-[33vw] p-7 flex flex-col justify-center">
@@ -54,7 +76,7 @@ const Login = ({setCurrentPage}) => {
           type="text"
         />
 
-        {error && <p className="text-red-500 text-xs pb-2.5">{error}</p>}
+        {error && <p className="text-red-500 text-sm pb-2.5">{error}</p>}
 
         <Input
           value={password}
@@ -71,7 +93,7 @@ const Login = ({setCurrentPage}) => {
         <p className="text-[13px] text-slate-800 mt-3">
           Don't have an account?{''}
           <button
-            className="font-medium text-primary underline cursor-pointer"
+            className="font-medium text-primary underline cursor-pointer text-blue-800"
             onClick={() => setCurrentPage ('signup')}
           >
             SignUp

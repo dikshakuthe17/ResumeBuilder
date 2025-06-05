@@ -14,7 +14,7 @@ const Modal = ({
   if (!isOpen) return null;
 
   return (
-    <div className="flex inset-0 z-50 flex justify-center items-center w-full h-full bg-black/40">
+    <div className="fixed inset-0 z-50 flex justify-center items-center w-full h-full bg-black/40">
 
       {/* Modal content */}
       <div
@@ -40,7 +40,7 @@ const Modal = ({
         {/* modal body */}
         <button
           type="button"
-          className="text-gray-400 bg-transparent hover:bg-gray-300 rounded-lg text-sm w-8 h-8 flex justify-center items-center absolute top-3.5 right-3.5"
+          className="text-gray-400 bg-transparent hover:bg-gray-300 hover:text-gray-900 rounded-lg text-sm w-8 h-8 flex justify-center items-center absolute top-3.5 right-3.5"
           onClick={onClose}
         >
 

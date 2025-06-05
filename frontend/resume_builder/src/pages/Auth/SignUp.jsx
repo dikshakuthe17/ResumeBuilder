@@ -3,6 +3,12 @@ import Input from '../../components/Inputs/Input';
 import {useNavigate} from 'react-router-dom';
 import {validateEmail} from '../../utils/helper';
 import ProfilePhotoSelector from '../../components/Inputs/ProfilePhotoSelector';
+import axiosInstance from '../../utils/axiosInstance';
+import {API_PATHS} from '../../utils/apiPaths';
+import {UserContext} from '../../context/userContext';
+import {useContext} from 'react';
+import {uploadImage} from '../../utils/uploadImage';
+
 
 const SignUp = ({setCurrentPage}) => {
   const [profilePic, setProfilePic] = useState (null);
@@ -12,12 +18,13 @@ const SignUp = ({setCurrentPage}) => {
 
   const [error, setError] = useState ('');
   const navigate = useNavigate ();
+  const {updateUser} = useContext (UserContext);
 
   // Handle SignUp Form submit
   const handleSignUp = async e => {
     e.preventDefault ();
 
-    let profilePicUrl = '';
+    let profileImageUrl = '';
 
     if (!validateEmail (email)) {
       setError ('Please enter a valid email address.');
@@ -38,11 +45,35 @@ const SignUp = ({setCurrentPage}) => {
 
     // SignUp API Call
 
-    // try{
+    try {
+      // Upload Profile Image if exists
+      if (profilePic) {
+        const imgUploadRes = await uploadImage (profilePic);
+        profileImageUrl = imgUploadRes.imageUrl || '';
+      }
 
-    // }catch(error){
+      const response = await axiosInstance.post (API_PATHS.AUTH.REGISTER, {
+        username: fullName,
+        email,
+        password,
+        profileImageUrl,
+      });
 
-    // }
+      const {token} = response.data;
+
+      if (token) {
+        localStorage.setItem ('token', token);
+        updateUser (response.data);
+        navigate ('/dashboard');
+      }
+    } catch (error) {
+      console.error (error);
+      if (error.response && error.response.data.message) {
+        setError (error.response.data.message);
+      } else {
+        setError ('something went wrong, please try again.');
+      }
+    }
   };
 
   return (
@@ -71,7 +102,7 @@ const SignUp = ({setCurrentPage}) => {
           value={email}
           onChange={({target}) => setEmail (target.value)}
           label="Email Address"
-          placeholder=""
+          placeholder="john@example.com"
           type="text"
         />
         {error && <p className="text-red-500 text-sm mb-2">{error}</p>}
@@ -83,14 +114,14 @@ const SignUp = ({setCurrentPage}) => {
           placeholder="Min 8 characters"
           type="password"
         />
-       
+
         <button type="submit" className="btn-primary ">
           Sign Up
         </button>
         <p className="text-[13px] text-slate-800 mt-3">
           Already have an account?{' '}
           <button
-            className="font-medium text-primary underline cursor-pointer"
+            className="font-medium text-primary underline cursor-pointer text-blue-800"
             onClick={() => setCurrentPage ('login')}
           >
             Login
