@@ -33,9 +33,9 @@ const UserProvider = ({children}) => {
     // eslint-disable-next-line
   }, []);
 
-  const updateUser = updatedUser => {
-    setUser (updatedUser);
-    localStorage.setItem ('token', updatedUser.token);
+  const updateUser = (userData) => {
+    setUser (userData);
+    localStorage.setItem ('token', userData.token);
     setLoading (false);
   };
 

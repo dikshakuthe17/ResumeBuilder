@@ -5,6 +5,7 @@ import LandingPage from './pages/LandingPage';
 import {UserProvider} from './context/userContext';
 import Dashboard from './pages/Home/Dashboard';
 import EditResume from './pages/ResumeUpdate/EditResume';
+import ProtectedRoute from './components/ProtectedRoute';
 
 const App = () => {
   return (
@@ -13,8 +14,22 @@ const App = () => {
         <Router>
           <Routes>
             <Route path="/" element={<LandingPage />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/resume/:resumeId" element={<EditResume />} />
+            <Route 
+              path="/dashboard" 
+              element={
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/resume/:resumeId" 
+              element={
+                <ProtectedRoute>
+                  <EditResume />
+                </ProtectedRoute>
+              } 
+            />
           </Routes>
         </Router>
       </div>

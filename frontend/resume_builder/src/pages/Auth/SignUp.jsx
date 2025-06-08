@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState , useContext} from 'react';
 import Input from '../../components/Inputs/Input';
 import {useNavigate} from 'react-router-dom';
 import {validateEmail} from '../../utils/helper';
@@ -6,19 +6,18 @@ import ProfilePhotoSelector from '../../components/Inputs/ProfilePhotoSelector';
 import axiosInstance from '../../utils/axiosInstance';
 import {API_PATHS} from '../../utils/apiPaths';
 import {UserContext} from '../../context/userContext';
-import {useContext} from 'react';
-import {uploadImage} from '../../utils/uploadImage';
-
+import uploadImage from '../../utils/uploadImage';
 
 const SignUp = ({setCurrentPage}) => {
   const [profilePic, setProfilePic] = useState (null);
   const [fullName, setFullName] = useState ('');
   const [email, setEmail] = useState ('');
   const [password, setPassword] = useState ('');
-
+  
   const [error, setError] = useState ('');
-  const navigate = useNavigate ();
+
   const {updateUser} = useContext (UserContext);
+  const navigate = useNavigate ();
 
   // Handle SignUp Form submit
   const handleSignUp = async e => {
@@ -26,13 +25,13 @@ const SignUp = ({setCurrentPage}) => {
 
     let profileImageUrl = '';
 
-    if (!validateEmail (email)) {
-      setError ('Please enter a valid email address.');
+    if (!fullName) {
+      setError ('Please enter your full name.');
       return;
     }
 
-    if (!fullName) {
-      setError ('Please enter your full name.');
+    if (!validateEmail (email)) {
+      setError ('Please enter a valid email address.');
       return;
     }
 
@@ -52,7 +51,7 @@ const SignUp = ({setCurrentPage}) => {
         profileImageUrl = imgUploadRes.imageUrl || '';
       }
 
-      const response = await axiosInstance.post (API_PATHS.AUTH.REGISTER, {
+      const response = await axiosInstance.post(API_PATHS.AUTH.REGISTER, {
         username: fullName,
         email,
         password,
@@ -121,7 +120,7 @@ const SignUp = ({setCurrentPage}) => {
         <p className="text-[13px] text-slate-800 mt-3">
           Already have an account?{' '}
           <button
-            className="font-medium text-primary underline cursor-pointer text-blue-800"
+            className="font-medium text-primary underline cursor-pointer text-purple-700"
             onClick={() => setCurrentPage ('login')}
           >
             Login

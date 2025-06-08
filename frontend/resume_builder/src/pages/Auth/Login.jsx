@@ -93,7 +93,7 @@ const Login = ({setCurrentPage}) => {
         <p className="text-[13px] text-slate-800 mt-3">
           Don't have an account?{''}
           <button
-            className="font-medium text-primary underline cursor-pointer text-blue-800"
+            className="font-medium text-primary underline cursor-pointer text-purple-700"
             onClick={() => setCurrentPage ('signup')}
           >
             SignUp
