@@ -1,4 +1,4 @@
-export const BASE_URL = 'http://localhost:3000';
+export const BASE_URL = 'http://localhost:8000';
 
 // utils/apiPaths.js
 export const API_PATHS = {
@@ -16,7 +16,7 @@ export const API_PATHS = {
     UPLOAD_IMAGES: id => `/api/resume/${id}/upload-images`,
   },
   IMAGE: {
-    UPLOAD_IMAGE: '/api/image/upload-image',
+    UPLOAD_IMAGE: '/api/auth/upload-image',
   },
 };
-export const UPLOADS_URL = `${BASE_URL}/uploads/`;
+// export const UPLOADS_URL = `${BASE_URL}/uploads/`;
