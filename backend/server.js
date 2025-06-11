@@ -13,7 +13,7 @@ app.use (express.static (path.join (__dirname, 'public')));
 
 app.use (
   cors ({
-    origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
+    origin: process.env.CLIENT_URL || '*',
     methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
   })
@@ -26,10 +26,21 @@ connectDB ();
 app.use (express.json ());
 
 
-// Routes
+// auth Routes
 const authRoutes = require ('./routes/authRoutes');
 app.use ('/api/auth', authRoutes);
 
+// resume Routes
+const resumeRoutes = require ('./routes/resumeRoutes');
+app.use ('/api/resume', resumeRoutes);
+
+// Server uploads folder
+app.use ('/uploads', express.static (path.join (__dirname, 'uploads')
+,{
+  setHeaders: (res, path) => {
+    res.set ('Access-Control-Allow-Origin', 'http://localhost:5173'); // Allow CORS for uploads
+  },
+}));
 
 
 // Start server

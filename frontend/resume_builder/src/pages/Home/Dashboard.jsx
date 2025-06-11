@@ -4,7 +4,6 @@ import axiosInstance from './../../utils/axiosInstance';
 import {API_PATHS} from '../../utils/apiPaths';
 import DashboardLayout from '../../components/layouts/DashboardLayout'; // <-- Add this line
 
-
 const Dashboard = () => {
   const navigate = useNavigate ();
 
@@ -28,7 +27,6 @@ const Dashboard = () => {
     <DashboardLayout>
       it is dashboard
     </DashboardLayout>
-   
   );
 };
 export default Dashboard;

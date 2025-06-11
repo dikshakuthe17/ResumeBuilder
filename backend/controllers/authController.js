@@ -56,10 +56,9 @@ const loginUser = async (req, res) => {
     const {email, password} = req.body;
 
     // Check if user exists
-    const user = await User.findOneAndDelete ({email});
+    const user = await User.findOne({ email });
     if (!user) {
-      return res.status (400).json ({message: 'Invalid email  or password'});
-      c
+      return res.status (400).json ({message: 'Invalid email  or password'}); 
     }
 
     // Check if password is correct

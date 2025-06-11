@@ -14,8 +14,7 @@ const userSchema = new mongoose.Schema (
       type: String,
       required: true,
       unique: true,
-      trim: true,
-      lowercase: true,
+     
     },
     profileImageUrl: {
       type: String,
@@ -24,7 +23,7 @@ const userSchema = new mongoose.Schema (
   },
   {
     timestamps: true,
-    versionKey: false,
+    
   }
 );
 

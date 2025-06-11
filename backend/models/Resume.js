@@ -2,7 +2,7 @@
 const mongoose = require ('mongoose');
 
 // Define the resume schema
-const resumeSchema = new mongoose.Schema (
+const ResumeSchema = new mongoose.Schema (
   {
     userId: {
       type: mongoose.Schema.Types.ObjectId,
@@ -21,8 +21,11 @@ const resumeSchema = new mongoose.Schema (
       type: String,
     },
     profileInfo: {
-      type: Object, // Store profile information as an object
-      default: {}, // Default to an empty object if no profile info is provided
+      profilePreviewUrl:String,
+      fullName:String,
+      designation:String,
+      summary:String,
+
     },
     contactInfo: {
         email: String,
@@ -59,7 +62,7 @@ const resumeSchema = new mongoose.Schema (
       {
         title: String,
         description: String,
-        githubLink: String,
+        github: String,
         liveDemo: String,
       },
     ],
@@ -67,8 +70,8 @@ const resumeSchema = new mongoose.Schema (
       {
         name: String,
         issuer: String,
-        issueDate: Date,
-        expirationDate: Date,
+        year: Date,
+        
       },
     ],
 
@@ -87,42 +90,30 @@ const resumeSchema = new mongoose.Schema (
 );
 
 
-// Add a method to the schema to return a sanitized resume object
-resumeSchema.methods.toJSON = function () {
-  const resume = this;
-  const resumeObject = resume.toObject ();
+// // Add a method to the schema to return a sanitized resume object
+// resumeSchema.methods.toJSON = function () {
+//   const resume = this;
+//   const resumeObject = resume.toObject ();
 
-  // Remove sensitive fields if any
-  delete resumeObject.__v; // Remove version key if present
+//   // Remove sensitive fields if any
+//   delete resumeObject.__v; // Remove version key if present
 
-  return resumeObject;
-};
-// Middleware to update the updatedAt field before saving
-resumeSchema.pre ('save', function (next) {
-  this.updatedAt = Date.now ();
-  next ();
-});
+//   return resumeObject;
+// };
+// // Middleware to update the updatedAt field before saving
+// resumeSchema.pre ('save', function (next) {
+//   this.updatedAt = Date.now ();
+//   next ();
+// });
 
-// Create an index on userId for faster lookups
-resumeSchema.index (
-  {userId: 1}, // Index for userId
-  {unique: false} // Ensure userId is not unique, as a user can have multiple resumes
-);
+// // Create an index on userId for faster lookups
+// resumeSchema.index (
+//   {userId: 1}, // Index for userId
+//   {unique: false} // Ensure userId is not unique, as a user can have multiple resumes
+// );
 
 // Create the Resume model using the resume schema
-const Resume = mongoose.model ('Resume', resumeSchema);
+const Resume = mongoose.model ('Resume', ResumeSchema);
 module.exports = Resume;
 
-// Export the Resume model
-// This allows us to use the Resume model in other parts of the application
-// Example usage:
-const Resume = require ('./models/Resume');
-const newResume = new Resume ({
-  userId: userId,
-  title: 'My Resume',
-  content: 'Resume content',
-});
-newResume
-  .save ()
-  .then (() => console.log ('Resume saved!'))
-  .catch (err => console.error (err));
+
