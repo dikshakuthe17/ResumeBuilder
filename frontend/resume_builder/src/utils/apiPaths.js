@@ -8,7 +8,7 @@ export const API_PATHS = {
     GET_PROFILE: '/api/auth/profile',
   },
   RESUME: {
-    CREATE: '/api/resume/create',
+    CREATE: '/api/resume',
     GET_ALL: '/api/resume',
     GET_BY_ID: id => `/api/resume/${id}`,
     UPDATE: id => `/api/resume/${id}`,

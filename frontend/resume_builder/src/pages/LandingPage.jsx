@@ -61,7 +61,7 @@ const LandingPage = () => {
           <div className="w-full md:w-1/2">
             <img src={HERO_IMG} alt="Hero" className="w-full rounded-lg" />
           </div>
-        </div>;
+        </div>
 
         {/* Features Section */}
         <section className="mt-5">
