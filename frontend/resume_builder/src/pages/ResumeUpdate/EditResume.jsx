@@ -12,11 +12,11 @@ import {
   LuSave,
   LuTrash2,
 } from 'react-icons/lu';
-import toast from 'react-hot-toast';
+// import toast from 'react-hot-toast';
 import { useReactToPrint } from "react-to-print"
 import { API_PATHS } from '../../utils/apiPaths';
 import axiosInstance from '../../utils/axiosInstance';
-import StepProgress from '../../components/StepProgress';
+// import StepProgress from '../../components/StepProgress';
 import ProfileInfoForm from './Forms/ProfileInfoForm';
 import ContactInfoForm from './Forms/ContactInfoForm.jsx';
 import WorkExperienceForm from './Forms/WorkExperienceForm.jsx';
@@ -25,6 +25,7 @@ import SkillsInfoForm from './Forms/SkillsInfoForm.jsx';
 import ProjectsDetailForm from './Forms/ProjectsDetailForm.jsx';
 import CertificationInfoForm from './Forms/CertificationInfoForm.jsx';
 import AdditionalInfoForm from "./Forms/AdditionalInfoForm.jsx"
+import RenderResume from '../../components/ResumeTemplate/RenderResume.jsx';
 
 const EditResume = () => {
   const { resumeId } = useParams();
@@ -471,7 +472,12 @@ if (currentPage === "profile-info") navigate("/dashboard")
   const reactToPrintFn = useReactToPrint({ contentRef: resumeDownloadRef })
 
   // function to update vaseWidthe base on the resume container size
-  const updateBaseWidth = () => { }
+  const updateBaseWidth = () => { 
+    if (resumeRef.current) {
+      setBaseWidth(resumeRef.current.offsetWidth);
+      
+    }
+  }
 
   useEffect(() => {
     updateBaseWidth();
@@ -540,7 +546,7 @@ if (currentPage === "profile-info") navigate("/dashboard")
         </div>
 
         <div className='grid grid-cols-1 md:grid-cols-2 gap-5'>
-          <div className='bg-white rounded-lg border border-purple-300 overflow-hidden'>
+          {/* <div className='bg-white rounded-lg border border-purple-300 overflow-hidden'>
 
             <StepProgress progress={0} />
             {renderForm()}
@@ -593,8 +599,16 @@ if (currentPage === "profile-info") navigate("/dashboard")
                 </button>
               </div>
             </div>
-          </div>
+          </div> */}
+
           <div ref={resumeRef} className='h-[100vh]'>{/*Resume Template */}</div>
+
+          <RenderResume
+          templateId = {resumeData?.template?.theme || ""}
+          resumeData = {resumeData}
+          colorpalette = {resumeData?.template?.colorpalette || []}
+          containerWidth = {baseWidth}
+          />
         </div>
       </div>
 
