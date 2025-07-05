@@ -1,5 +1,6 @@
 import React from 'react';
 
+
 const StepProgress = ({progress}) => {
   return (
     <div className='w-full bg-purple-50 h-1 overflow-hidden rounded-[12px]'>

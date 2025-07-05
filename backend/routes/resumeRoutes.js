@@ -10,6 +10,7 @@ const {protect} = require ('../middleware/authMiddleware');
 const {uploadResumeImages} = require('../controllers/uploadImages');
 const router = express.Router ();
 
+const upload = require('../middleware/uploadMiddleware');
 // Route to create a new resume
 router.post ('/', protect, createResume);
 
@@ -26,6 +27,13 @@ router.put ('/:id', protect, updateResume);
 router.delete ('/:id', protect, deleteResume);
 
 // Route to update resume images
-router.put('/:id/upload-images', protect, uploadResumeImages);
-
+router.put(
+  '/:id/upload-images',
+  protect,
+  upload.fields([
+    { name: 'thumbnail', maxCount: 1 },
+    { name: 'profileImg', maxCount: 1 }
+  ]),
+  uploadResumeImages
+);
 module.exports = router;

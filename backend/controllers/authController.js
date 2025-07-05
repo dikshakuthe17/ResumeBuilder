@@ -14,7 +14,7 @@ const generateToken = UserId => {
 // @access Public
 const registerUser = async (req, res) => {
   try {
-    const {username, email, password, profileImageUrl} = req.body;
+    const {username, email, password, profileImgUrl} = req.body;
 
     // Check if user already exists
     const existingUser = await User.findOne ({email});
@@ -31,7 +31,7 @@ const registerUser = async (req, res) => {
       username,
       email,
       password: hashedPassword,
-      profileImageUrl,
+      profileImgUrl,
     });
 
     //   Return user data with jwt token
@@ -39,7 +39,7 @@ const registerUser = async (req, res) => {
       _id: user._id,
       username: user.username,
       email: user.email,
-      profileImageUrl: user.profileImageUrl,
+      profileImgUrl: user.profileImgUrl,
       token: generateToken (user._id),
     });
   } catch (error) {
@@ -56,9 +56,9 @@ const loginUser = async (req, res) => {
     const {email, password} = req.body;
 
     // Check if user exists
-    const user = await User.findOne({ email });
+    const user = await User.findOne ({email});
     if (!user) {
-      return res.status (400).json ({message: 'Invalid email  or password'}); 
+      return res.status (400).json ({message: 'Invalid email  or password'});
     }
 
     // Check if password is correct
@@ -72,7 +72,7 @@ const loginUser = async (req, res) => {
       _id: user._id,
       username: user.username,
       email: user.email,
-      profileImageUrl: user.profileImageUrl,
+      profileImgUrl: user.profileImgUrl,
       token: generateToken (user._id),
     });
     console.log ('User logged in successfully');
@@ -86,17 +86,16 @@ const loginUser = async (req, res) => {
 // @route GET /api/auth/profile
 // @access Private
 const getUserProfile = async (req, res) => {
-    try {
-        const user = await User.findById (req.user.id).select ('-password');
-        if (!user) {
-        return res.status (404).json ({message: 'User not found'});
-       
-        }
-        res.status (200).json (user);
-    } catch (error) {
-        console.error ('Error fetching user profile:', error);
-        res.status (500).json ({message: 'Server error'});
+  try {
+    const user = await User.findById (req.user.id).select ('-password');
+    if (!user) {
+      return res.status (404).json ({message: 'User not found'});
     }
+    res.status (200).json (user);
+  } catch (error) {
+    console.error ('Error fetching user profile:', error);
+    res.status (500).json ({message: 'Server error'});
+  }
 };
 
 module.exports = {

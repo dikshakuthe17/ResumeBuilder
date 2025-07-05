@@ -13,7 +13,7 @@ const TileInput = ({title , setTitle}) => {
                     <input
                     type="text"
                     placeholder="Resume title"
-                    className="text-sm md:text-[17px] bg-transparent outline-none text-black font-semibold border border-gray-300 pb-1 px-3"
+                    className="text-sm md:text-[17px] bg-transparent outline-none text-black font-semibold border border-gray-300 p-1 px-3"
                     value={title}
                     onChange={({target}) => setTitle(target.value)}
                     />

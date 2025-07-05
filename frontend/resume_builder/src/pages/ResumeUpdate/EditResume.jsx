@@ -12,11 +12,11 @@ import {
   LuSave,
   LuTrash2,
 } from 'react-icons/lu';
-// import toast from 'react-hot-toast';
+import toast from 'react-hot-toast';
 import { useReactToPrint } from "react-to-print"
 import { API_PATHS } from '../../utils/apiPaths';
 import axiosInstance from '../../utils/axiosInstance';
-// import StepProgress from '../../components/StepProgress';
+import StepProgress from '../../components/StepProgress';
 import ProfileInfoForm from './Forms/ProfileInfoForm';
 import ContactInfoForm from './Forms/ContactInfoForm.jsx';
 import WorkExperienceForm from './Forms/WorkExperienceForm.jsx';
@@ -26,6 +26,13 @@ import ProjectsDetailForm from './Forms/ProjectsDetailForm.jsx';
 import CertificationInfoForm from './Forms/CertificationInfoForm.jsx';
 import AdditionalInfoForm from "./Forms/AdditionalInfoForm.jsx"
 import RenderResume from '../../components/ResumeTemplate/RenderResume.jsx';
+import{ fixTailwindColors }from "../../utils/helper.js"
+import {captureElementAsImage} from '../../utils/helper.js';
+import {dataURLtoFile} from '../../utils/helper.js';
+import Modal from '../../components/Modal.jsx';
+import ThemeSelector from './Forms/ThemeSelector.jsx';
+
+
 
 const EditResume = () => {
   const { resumeId } = useParams();
@@ -40,27 +47,27 @@ const EditResume = () => {
 
   const [openPreviewModal, setOpenPreviwModal] = useState(false);
 
-  const [currentPage, setCurrentPage] = useState('profile-info');
+  const [currentPage, setCurrentPage] = useState('projects');
 
   const [progress, setProgress] = useState(0);
   const [resumeData, setResumeData] = useState({
     title: '',
     thumbnailLink: '',
     profileInfo: {
-      profileImg: null,
+      profilePreviewUrl: null,
       fullName: '',
       designation: '',
       summary: '',
     },
     template: {
       theme: '',
-      colorpalette: '',
+      colorPalette: '',
     },
     contactInfo: {
       email: '',
       phone: '',
       location: '',
-      linkdIn: '',
+      linkdin: '',
       github: '',
       website: '',
     },
@@ -97,7 +104,7 @@ const EditResume = () => {
     ],
     certifications: [
       {
-        name: '',
+        title: '',
         issuer: '',
         year: '',
       },
@@ -182,8 +189,8 @@ const EditResume = () => {
           break;
 
           case "certifications":
-            resumeData.certifications.forEach(({name , issuer} , index) =>{
-              if (!name.trim()) 
+            resumeData.certifications.forEach(({title , issuer} , index) =>{
+              if (!title.trim()) 
                 errors.push(`Certification name is required in certification ${index +1}`)
               if (!issuer.trim()) 
                 errors.push(`Issuer is required in certification ${index +1}`)
@@ -227,7 +234,7 @@ const EditResume = () => {
       'work-experience',
       "education-info",
       "skills",
-      "Projects",
+      "projects",
       "certifications",
       "additionalInfo",
 ]
@@ -255,7 +262,7 @@ if(currentPage === "additionalInfo") setOpenPreviwModal(true)
   'work-experience',
   'education-info',
   'skills',
-  'Projects',
+  'projects',
   'certifications',
   'additionalInfo',
 ];
@@ -330,7 +337,7 @@ if (currentPage === "profile-info") navigate("/dashboard")
             removeArrayItem={(index) => removeArrayItem("skills", index)}
           />
         );
-      case "Projects":
+      case "projects":
         return (
           <ProjectsDetailForm
             projectInfo={resumeData?.projects}
@@ -460,13 +467,82 @@ if (currentPage === "profile-info") navigate("/dashboard")
   }
 
   // upload thumbnail and reusme profile img
-  const uploadResumeImages = async () => { }
+  const uploadResumeImages = async () => {
+    try{
+      setIsLoading(true);
 
-  const updateResumeDetails = async () => { }
+      fixTailwindColors(resumeRef.current);
+      const imageDataUrl = await captureElementAsImage(resumeRef.current);
+
+      // convert base64 to File
+      const thumbnailFile = dataURLtoFile(
+        imageDataUrl,
+        `resume-${resumeId}.png`
+      );
+
+      const profileImgFile = resumeData?.profileInfo?.profileImg || null;
+
+      const formData = new FormData();
+      if(profileImgFile) formData.append("thumbnail", thumbnailFile)
+
+        const uploadResponse = await axiosInstance.put(
+          API_PATHS.RESUME.UPLOAD_IMAGES(resumeId),
+          formData,
+          {
+            headers:{"Content-Type" : "multipart/form-data"}
+          }
+
+        );
+        const {thumbnailLink , profilePreviewUrl} = uploadResponse.data;
+
+        console.log("RESUME_DATA__" , resumeData)
+
+        // call the second API to the update other resume data
+        await updateResumeDetails(thumbnailLink , profilePreviewUrl);
+
+        toast.success("Resume updated Successfully");
+        navigate("/dashboard");
+
+    }catch(error){
+      console.error("Error uploading images :" , error);
+      toast.error("Failed to upload images");
+    }finally{
+      setIsLoading(false);
+    }
+   }
+
+  const updateResumeDetails = async (thumbnailLink , profilePreviewUrl) => { 
+
+
+    try {
+      
+      setIsLoading(true);
+
+      const response = await axiosInstance.put(
+        API_PATHS.RESUME.UPDATE(resumeId),
+        {
+          ...resumeData,
+          thumbnailLink : thumbnailLink || "" ,
+          profileInfo : {
+            ...resumeData.profileInfo,
+            profilePreviewUrl: profilePreviewUrl || "",
+
+          },
+        }
+      );
+    } catch (err) {
+      console.log("Error capturing image:" , err)
+      
+    }finally{
+      setIsLoading(false)
+    }
+  }
 
 
   // delete Resume
-  const handleDeleteResume = async () => { }
+  const handleDeleteResume = async () => { 
+    
+  }
 
   // download resume
   const reactToPrintFn = useReactToPrint({ contentRef: resumeDownloadRef })
@@ -546,7 +622,7 @@ if (currentPage === "profile-info") navigate("/dashboard")
         </div>
 
         <div className='grid grid-cols-1 md:grid-cols-2 gap-5'>
-          {/* <div className='bg-white rounded-lg border border-purple-300 overflow-hidden'>
+          <div className='bg-white rounded-lg border border-purple-300 overflow-hidden'>
 
             <StepProgress progress={0} />
             {renderForm()}
@@ -599,18 +675,63 @@ if (currentPage === "profile-info") navigate("/dashboard")
                 </button>
               </div>
             </div>
-          </div> */}
+          </div>
 
-          <div ref={resumeRef} className='h-[100vh]'>{/*Resume Template */}</div>
+          <div ref={resumeRef} className='h-[100vh]'>
 
           <RenderResume
           templateId = {resumeData?.template?.theme || ""}
           resumeData = {resumeData}
-          colorpalette = {resumeData?.template?.colorpalette || []}
+          colorPalette = {resumeData?.template?.colorPalette || []}
           containerWidth = {baseWidth}
           />
+          </div>
         </div>
       </div>
+
+      <Modal 
+      isOpen={openThemeSelector}
+      onClose={() => setOpenThemeSelector(false)}
+      title="Change Theme">
+        <div className='w-[90vw] h-[80vh]'>
+          <ThemeSelector
+          selectedTheme = {resumeData?.template}
+          setSelectedTheme = {
+            (value) => {
+              setResumeData((prevState) => ({
+                ...prevState,
+                template : value || prevState.template,
+              }))
+            }
+          }
+          resumeData = {null}
+          onClose = {() => setOpenThemeSelector(false)}
+          />
+        </div>
+      </Modal>
+
+      <Modal
+      isOpen={openPreviewModal}
+      onClose={() => setOpenPreviwModal(false)}
+      title={resumeData.title}
+      showActionBtn
+      actionBtnText="Download"
+      actionBtnIcon={<LuDownload className='text-[16px]'/>}
+      onActionClick={() => reactToPrintFn()}
+      >
+
+        <div
+        ref={resumeDownloadRef}
+        className='w-[98vw] h-[90vh]'
+        >
+          <RenderResume
+          templateId={resumeData?.template?.theme || ""}
+          resumeData={resumeData}
+          colorPalette={resumeData?.template?.colorPalette || []}
+          />
+        </div>
+
+      </Modal>
 
     </DashboardLayout>
   );

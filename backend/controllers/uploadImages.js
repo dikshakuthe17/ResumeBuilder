@@ -16,26 +16,28 @@ const uploadResumeImages = async (req, res) => {
       return res.status (404).json ({message: 'Resume not found'});
     }
 
-    // Delete old images if new images are uploaded
-    if (req.files && req.files.length > 0) {
-      resume.images.forEach (imagePath => {
-        const fullPath = path.join (__dirname, '../', imagePath);
-        if (fs.existsSync (fullPath)) {
-          fs.unlinkSync (fullPath);
-        }
-      });
-      resume.images = []; // Clear old images
-
-      // Save new image paths to the resume
-      const imagePaths = req.files.map (file => file.path);
-      resume.images.push (...imagePaths);
-      await resume.save ();
-
-      console.log ('Resume images uploaded');
-      return res.status (200).json (resume);
-    } else {
-      return res.status (400).json ({message: 'No images uploaded'});
+    // Handle thumbnail
+    let thumbnailLink = resume.thumbnailLink || '';
+    if (req.files && req.files.thumbnail && req.files.thumbnail[0]) {
+      // Optionally delete old thumbnail file here if needed
+      thumbnailLink = req.files.thumbnail[0].path;
+      resume.thumbnailLink = thumbnailLink;
     }
+
+    // Handle profileImg
+    let profilePreviewUrl = resume.profileInfo?.profilePreviewUrl || '';
+    if (req.files && req.files.profileImg && req.files.profileImg[0]) {
+      // Optionally delete old profile image file here if needed
+      profilePreviewUrl = req.files.profileImg[0].path;
+      resume.profileInfo.profilePreviewUrl = profilePreviewUrl;
+    }
+
+    await resume.save();
+
+    res.status(200).json({
+      thumbnailLink,
+      profilePreviewUrl
+    });
   } catch (error) {
     res.status (500).json ({message: 'Server error', error: error.message});
   }

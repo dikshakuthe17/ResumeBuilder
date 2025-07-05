@@ -12,7 +12,7 @@ const createResume = async (req, res) => {
     // default template
     const defaultResumeData = {
       profileInfo: {
-        profileImage: 'null',
+        profileImg: 'null',
         previewUrl: '',
         fullName: '',
         designation: '',
@@ -59,7 +59,7 @@ const createResume = async (req, res) => {
       ],
       certifications: [
         {
-          name: '',
+          title: '',
           issuer: '',
           year: '',
         },
@@ -112,12 +112,12 @@ const getResumeById = async (req, res) => {
       userId: req.user._id,
     });
     if (!resume) {
-      return res.status(404).json({ message: 'Resume not found' });
+      return res.status (404).json ({message: 'Resume not found'});
     }
-    console.log('Resume fetched by ID');
-    res.status(200).json(resume);
+    console.log ('Resume fetched by ID');
+    res.status (200).json (resume);
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+    res.status (500).json ({message: 'Server error'});
   }
 };
 // @desc Update a resume
@@ -125,57 +125,61 @@ const getResumeById = async (req, res) => {
 // @access Private
 const updateResume = async (req, res) => {
   try {
-    const { id } = req.params;
+    const {id} = req.params;
     const updatedData = req.body;
 
-    const resume = await Resume.findOneAndUpdate(
-      { _id: id, userId: req.user._id },
+    const resume = await Resume.findOneAndUpdate (
+      {_id: id, userId: req.user._id},
       updatedData,
-      { new: true }
+      {new: true}
     );
 
     if (!resume) {
-      return res.status(404).json({ message: 'Resume not found' });
+      return res.status (404).json ({message: 'Resume not found'});
     }
 
-    console.log('Resume updated');
-    res.status(200).json(resume);
+    console.log ('Resume updated');
+    res.status (200).json (resume);
   } catch (error) {
-    res.status(500).json({ message: 'Server error', error: error.message });
+    res.status (500).json ({message: 'Server error', error: error.message});
   }
-
 };
 // @desc Delete a resume
 // @route DELETE /api/resume/:id
 // @access Private
 const deleteResume = async (req, res) => {
   try {
-    const { id } = req.params;
+    const {id} = req.params;
 
-    const resume = await Resume.findOneAndDelete({
+    const resume = await Resume.findOneAndDelete ({
       _id: id,
       userId: req.user._id,
     });
 
     if (!resume) {
-      return res.status(404).json({ message: 'Resume not found' });
+      return res.status (404).json ({message: 'Resume not found'});
     }
-    
 
     // Optionally, delete the associated profile image if it exists
-    if (resume.profileInfo.profileImage && resume.profileInfo.profileImage !== 'null') {
-      const imagePath = path.join(__dirname, '../uploads', resume.profileInfo.profileImage);
-      if (fs.existsSync(imagePath)) {
-        fs.unlinkSync(imagePath);
+    if (
+      resume.profileInfo.profileImg &&
+      resume.profileInfo.profileImg !== 'null'
+    ) {
+      const imagePath = path.join (
+        __dirname,
+        '../uploads',
+        resume.profileInfo.profileImg
+      );
+      if (fs.existsSync (imagePath)) {
+        fs.unlinkSync (imagePath);
       }
     }
 
-    console.log('Resume deleted successfully');
-    res.status(200).json({ message: 'Resume deleted successfully' });
+    console.log ('Resume deleted successfully');
+    res.status (200).json ({message: 'Resume deleted successfully'});
   } catch (error) {
-    res.status(500).json({ message: 'Server error', error: error.message });
+    res.status (500).json ({message: 'Server error', error: error.message});
   }
-
 };
 
 module.exports = {

@@ -32,7 +32,7 @@ const Title = ({text, color}) => {
   );
 };
 
-const TemplateOne = ({resumeData, colorPalette, containerWidth}) => {
+const TemplateThree = ({resumeData, colorPalette, containerWidth}) => {
   const themeColors = colorPalette?.length > 0 ? colorPalette : DEFAULT_THEME;
 
   const resumeRef = useRef (null);
@@ -60,12 +60,66 @@ const TemplateOne = ({resumeData, colorPalette, containerWidth}) => {
         height: 'auto',
       }}
     >
+
+        <div className='flex items-start gap-5 px-2 mb-5'>
+            <div className='w-[100px] h-[100px] max-w-[105px] max-h-[105px] rounded-2xl flex items-center justify-center'
+            style={{backgroundColor: themeColors[1]}}>
+                {resumeData.profileInfo.profilePreviewUrl ? (
+                    <img 
+                    src={resumeData.profileInfo.profilePreviewUrl}
+                    className='w-[90px] h-[90px] rounded-2xl'
+                    />
+                ):(
+                    <div
+                    className='w-[90px] h-[90px] flex items-center justify-center text-5xl rounded-full '
+                    style={{color : themeColors[4]}}
+                    >
+                        <LuUser/>
+
+                    </div>
+                )}
+            </div>
+
+            <div >
+                <div className='grid grid-cols-12 items-center'>
+                    <div className='col-span-8'>
+                        <h2 className='text-2xl font-bold'>
+                            {resumeData.profileInfo.fullName}
+                        </h2>
+                        <p className='text-[15px] font-semibold mb-2'>
+                            {resumeData.profileInfo.designation}
+                        </p>
+
+                        <ContactInfo
+                        icon={<LuMapPinHouse/>}
+                        iconBG={themeColors[2]}
+                        value={resumeData.contactInfo.location}
+                        />
+                    </div>
+
+                    <div className='col-span-4 flex flex-col gap-5 mt-2'>
+              <ContactInfo
+                icon={<LuMail />}
+                iconBG={themeColors[2]}
+                value={resumeData.contactInfo.email}
+              />
+
+              <ContactInfo
+                icon={<LuPhone />}
+                iconBG={themeColors[2]}
+                value={resumeData.contactInfo.phone}
+              />
+                    </div>
+                </div>
+            </div>
+         </div>
+
       <div className="grid grid-cols-12 gap-8">
         <div
           className="col-span-4 py-10"
           style={{backgroundColor: themeColors[0]}}
         >
-          <div className="flex flex-col items-center px-2">
+          {/* <div className="flex flex-col items-center px-2">
             <div
               className="w-[100px] h-[100px] max-w-[110px max-h-[110px] rounded-full flex items-center justify-center "
               style={{backgroundColor: themeColors[1]}}
@@ -94,11 +148,11 @@ const TemplateOne = ({resumeData, colorPalette, containerWidth}) => {
             <p className="text-sm text-center">
               {resumeData.profileInfo.designation}
             </p>
-          </div>
+          </div> */}
 
           <div className="my-6 mx-6">
             <div className="flex flex-col gap-4">
-              <ContactInfo
+              {/* <ContactInfo
                 icon={<LuMapPinHouse />}
                 iconBG={themeColors[2]}
                 value={resumeData.contactInfo.location}
@@ -114,7 +168,7 @@ const TemplateOne = ({resumeData, colorPalette, containerWidth}) => {
                 icon={<LuPhone />}
                 iconBG={themeColors[2]}
                 value={resumeData.contactInfo.phone}
-              />
+              /> */}
 
               {resumeData.contactInfo.linkedin &&
                 <ContactInfo
@@ -254,4 +308,4 @@ const TemplateOne = ({resumeData, colorPalette, containerWidth}) => {
   );
 };
 
-export default TemplateOne;
+export default TemplateThree;

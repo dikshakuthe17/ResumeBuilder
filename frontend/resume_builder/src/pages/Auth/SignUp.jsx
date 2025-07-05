@@ -1,4 +1,4 @@
-import React, {useState , useContext} from 'react';
+import React, {useState, useContext} from 'react';
 import Input from '../../components/Inputs/Input';
 import {useNavigate} from 'react-router-dom';
 import {validateEmail} from '../../utils/helper';
@@ -13,7 +13,7 @@ const SignUp = ({setCurrentPage}) => {
   const [fullName, setFullName] = useState ('');
   const [email, setEmail] = useState ('');
   const [password, setPassword] = useState ('');
-  
+
   const [error, setError] = useState ('');
 
   const {updateUser} = useContext (UserContext);
@@ -23,7 +23,7 @@ const SignUp = ({setCurrentPage}) => {
   const handleSignUp = async e => {
     e.preventDefault ();
 
-    let profileImageUrl = '';
+    let profileImgUrl = '';
 
     if (!fullName) {
       setError ('Please enter your full name.');
@@ -48,14 +48,14 @@ const SignUp = ({setCurrentPage}) => {
       // Upload Profile Image if exists
       if (profilePic) {
         const imgUploadRes = await uploadImage (profilePic);
-        profileImageUrl = imgUploadRes.imageUrl || '';
+        profileImgUrl = imgUploadRes.imageUrl || '';
       }
 
-      const response = await axiosInstance.post(API_PATHS.AUTH.REGISTER, {
+      const response = await axiosInstance.post (API_PATHS.AUTH.REGISTER, {
         username: fullName,
         email,
         password,
-        profileImageUrl,
+        profileImgUrl,
       });
 
       const {token} = response.data;

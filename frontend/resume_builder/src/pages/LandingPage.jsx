@@ -2,7 +2,7 @@ import {useState} from 'react';
 import Login from './Auth/Login';
 import Modal from '../components/Modal';
 import SignUp from './Auth/SignUp';
-import HERO_IMG from '../assets/hero.png';
+import HERO_IMG from '../assets/hero.jpg';
 import {useNavigate} from 'react-router-dom';
 import { UserContext } from '../context/userContext';
 import { useContext } from 'react';
@@ -26,14 +26,14 @@ const LandingPage = () => {
   };
 
   return (
-    <div className="w-full min-h-full bg-white px-10">
-      <div className="container mx-auto px-4 py-6">
+    <div className="w-full min-h-full bg-blue-50 px-10">
+      <div className="container mx-auto px-4 py-10">
 
         {/* Header */}
-        <header className="flex justify-between items-center mb-16">
-          <div className="text-xl font-bold">Resume Builder</div>
+        <header className="flex justify-between items-center mb-20">
+          <div className="text-2xl font-bold text-gray-900">Resume Builder</div>
           {user ? <ProfileInfoCard /> : <button
-            className="bg-purple-100 text-sm font-semibold text-black px-7 py-2.5 rounded-lg hover:bg-gray-800 hover:text-white transition-colors cursor-pointer"
+            className="bg-teal-500 text-sm font-semibold text-white px-7 py-2.5 rounded-lg hover:bg-teal-600 transition-colors cursor-pointer"
             onClick={() => setOpenAuthModal (true)}
           >Login / Sign Up
           </button>}
@@ -42,56 +42,54 @@ const LandingPage = () => {
         {/* Hero Section */}
         <div className="flex flex-col md:flex-row items-center">
           <div className="w-full md:w-1/2 pr-4 mb-8 md:mb-0">
-            <h1 className="text-5xl font-bold mb-6 leading-tight">
-              Build Your{' '}
-              <span className="text-transparent bg-clip-text bg-[radial-gradient(circle,_#7182ff_0%,_#3cff52_100%)] bg-[length:200%_200%] animate-text-shine">
-                Resume Effortlessly
-              </span>
+            <h1 className="text-6xl md:text-7xl font-extrabold mb-6 leading-tight text-gray-900">
+              Craft Your Future.
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-700 via-teal-500 to-cyan-600"> Build a Resume That Opens Doors.</span>
             </h1>
-            <p className=" text-lg text-gray-700 mb-8">
-              Craft a standout resume in minutes with our smart and intuitive resume builder.
+            <p className=" text-xl text-gray-700 mb-8">
+              Leverage our intelligent platform to create professional, interview-winning resumes with unparalleled ease and speed.
             </p>
             <button
-              className="bg-black text-sm font-semibold text-white px-8 py-3 rounded-lg hover:bg-gray-800 transition-colors cursor-pointer"
+              className="bg-teal-500 text-base font-semibold text-white px-10 py-4 rounded-lg hover:bg-teal-600 transition-colors cursor-pointer"
               onClick={handleCTA}
             >
-              Get Started
+              Start Building for Free
             </button>
           </div>
           <div className="w-full md:w-1/2">
-            <img src={HERO_IMG} alt="Hero" className="w-full rounded-lg" />
+            <img src={HERO_IMG} alt="Hero" className="w-full rounded-lg shadow-xl" />
           </div>
         </div>
 
         {/* Features Section */}
-        <section className="mt-5">
-          <h2 className="text-2xl font-bold text-center mb-12">
-            {' '}Features That Make You Stand Out{' '}
+        <section className="mt-24">
+          <h2 className="text-3xl font-extrabold text-center mb-16 text-gray-900">
+            Features That Make You Stand Out
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 ">
-            <div className="bg-gray-50 p-6 rounded-xl shadow-sm hover:shadow-md transition">
-              <h3 className="text-lg font-semibold mb-3">
+            <div className="bg-white p-6 rounded-xl shadow-xl hover:shadow-2xl transition border border-gray-200">
+              <h3 className="text-xl font-bold mb-3 text-gray-900">
                 Easy Editing
               </h3>
-              <p className="text-gray-600">
+              <p className="text-gray-700">
                 Update your resume sections with a live preview and instant formatting.
               </p>
             </div>
 
-            <div className="bg-gray-50 p-6 rounded-xl shadow-sm hover:shadow-md transition">
-              <h3 className="text-lg font-semibold mb-3">
+            <div className="bg-white p-6 rounded-xl shadow-xl hover:shadow-2xl transition border border-gray-200">
+              <h3 className="text-xl font-bold mb-3 text-gray-900">
                 Beautiful Templates
               </h3>
-              <p className="text-gray-600">
+              <p className="text-gray-700">
                 Choose from modern, professional templates that are easy to customize.
               </p>
             </div>
 
-            <div className="bg-gray-50 p-6 rounded-xl shadow-sm hover:shadow-md transition">
-              <h3 className="text-lg font-semibold mb-3">
+            <div className="bg-white p-6 rounded-xl shadow-xl hover:shadow-2xl transition border border-gray-200">
+              <h3 className="text-xl font-bold mb-3 text-gray-900">
                 One-Click Export
               </h3>
-              <p className="text-gray-600">
+              <p className="text-gray-700">
                 Download your resume instantly as a high-quality PDF with one click.
               </p>
             </div>
@@ -99,12 +97,10 @@ const LandingPage = () => {
         </section>
 
         {/* Footer */}
-        <div className="mt-16 text-center text-gray-600">
+        <div className="mt-24 text-center text-gray-600">
           <p>
-            &copy;
-            {' '}
-            {new Date ().getFullYear ()}
-            {' '}
+            &copy;{' '}
+            {new Date ().getFullYear ()}{' '}
             Resume Builder. All rights reserved.
           </p>
           <p className="text-sm">Made with ❤️ by dikshakuthe</p>
